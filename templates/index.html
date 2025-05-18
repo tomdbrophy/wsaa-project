@@ -5,9 +5,79 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <!-- jQuery -->
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
+         <script>
+            var activities = [];
+            // Function to fetch activities from the server
+         function getActivities(){
+                $.ajax({
+                    'url': '/activities',
+                    'method': 'GET',
+                    'data':'',
+                    'dataType': 'JSON',
+                    'success': function(result){
+                        console.log(result)
+                        activities = result;
+                        return activities;
+                    }
+                })
+            }
+        </script>
     </head>
-    <body>
+    <body onload="getActivities()">
         <h1>Teaching Activities</h1>
+        <button onclick="getActivities()" class="btn btn-primary">Get Activities</button>
+
+        <div class="container">
+            <h2>Teaching Activities</h2>
+            <table class="table table-striped" id="activitiesTable">
+                <thead>
+                    <tr>
+                        <th>Student Group</th>
+                        <th>Module</th>
+                        <th>Staff</th>
+                        <th>Activity Type</th>
+                        <th>Activity Duration</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                    
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            // Function to populate the table with activities
+            // This function is called when the page loads
+            
+            function populateTable(activities) {
+                var tableElement = document.getElementById('activitiesTable')
+                var rowElement = tableElement.insertRow(-1)
+
+                rowElement.setAttribute('id', 'activityRow');
+
+                var studentCell = rowElement.insertCell(0);
+                var moduleCell = rowElement.insertCell(1);
+                var staffCell = rowElement.insertCell(2);
+                var activityTypeCell = rowElement.insertCell(3);
+                var activityDurationCell = rowElement.insertCell(4);
+
+                studentCell.innerHTML = activities[0].student_group;
+                moduleCell.innerHTML = activities[0].module_name;
+                staffCell.innerHTML = activities[0].staff_name;
+                activityTypeCell.innerHTML = activities[0].activity_type;
+                activityDurationCell.innerHTML = activities[0].activity_duration;
+            }
+            // Call the function to populate the table with activities
+            $(document).ready(function() {
+                getActivities();
+                setTimeout(function() {
+                    populateTable(activities);
+                }, 2000); // Adjust the timeout as needed
+            });
+
+        </script>
     </body>
 </html>
