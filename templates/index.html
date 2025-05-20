@@ -25,7 +25,7 @@
     </head>
     <body onload="getActivities()">
         <h1>Teaching Activities</h1>
-        <button onclick="getActivities()" class="btn btn-primary">Get Activities</button>
+        <button onclick="populateTable(activities)" class="btn btn-primary">Get Activities</button>
 
         <div class="container">
             <h2>Teaching Activities</h2>
@@ -50,34 +50,27 @@
 
         <script>
             // Function to populate the table with activities
-            // This function is called when the page loads
-            
+            // This function is called when the button is clicked
+            // It fetches the activities from the server and populates the table
             function populateTable(activities) {
-                var tableElement = document.getElementById('activitiesTable')
-                var rowElement = tableElement.insertRow(-1)
-
-                rowElement.setAttribute('id', 'activityRow');
-
-                var studentCell = rowElement.insertCell(0);
-                var moduleCell = rowElement.insertCell(1);
-                var staffCell = rowElement.insertCell(2);
-                var activityTypeCell = rowElement.insertCell(3);
-                var activityDurationCell = rowElement.insertCell(4);
-
-                studentCell.innerHTML = activities[0].student_group;
-                moduleCell.innerHTML = activities[0].module_name;
-                staffCell.innerHTML = activities[0].staff_name;
-                activityTypeCell.innerHTML = activities[0].activity_type;
-                activityDurationCell.innerHTML = activities[0].activity_duration;
-            }
-            // Call the function to populate the table with activities
-            $(document).ready(function() {
                 getActivities();
-                setTimeout(function() {
-                    populateTable(activities);
-                }, 2000); // Adjust the timeout as needed
-            });
+                for (var i = 0; i < activities.length; i++) {
+                    var tableElement = document.getElementById('activitiesTable')
+                    var rowElement = tableElement.insertRow(-1)
 
+                    var studentCell = rowElement.insertCell(0);
+                    var moduleCell = rowElement.insertCell(1);
+                    var staffCell = rowElement.insertCell(2);
+                    var activityTypeCell = rowElement.insertCell(3);
+                    var activityDurationCell = rowElement.insertCell(4);
+
+                    studentCell.innerHTML = activities[i].student_group;
+                    moduleCell.innerHTML = activities[i].module_name;
+                    staffCell.innerHTML = activities[i].staff_name;
+                    activityTypeCell.innerHTML = activities[i].activity_type;
+                    activityDurationCell.innerHTML = activities[i].activity_duration;
+                }
+            }
         </script>
     </body>
 </html>
