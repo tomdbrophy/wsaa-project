@@ -17,7 +17,7 @@ class DAO:
             result = cursor.fetchall()
         return result
 
-    def execute_update(self, query, params=None):
+    def update(self, query, params=None):
         with self.connection.cursor() as cursor:
             cursor.execute(query, params)
             self.connection.commit()

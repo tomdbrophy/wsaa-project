@@ -25,13 +25,14 @@
     </head>
     <body onload="getActivities()">
         <h1>Teaching Activities</h1>
-        <button onclick="populateTable(activities)" class="btn btn-primary">Get Activities</button>
+        <button onclick="populateTable(activities); showAll()" class="btn btn-primary">Get Activities</button>
 
-        <div class="container">
+        <div id="allActivitiesTable" style="display: none;">
             <h2>Teaching Activities</h2>
             <table class="table table-striped" id="activitiesTable">
                 <thead>
                     <tr>
+                        <th>Activity ID</th>
                         <th>Student Group</th>
                         <th>Module</th>
                         <th>Staff</th>
@@ -48,6 +49,17 @@
             </table>
         </div>
 
+        <div id="updateActivity" style="display: block;">
+            <h2>Update Activity</h2>
+            id: <input type="text" id="activityId" placeholder="Activity ID"><br>
+            Student Group: <input type="text" id="studentGroup" placeholder="Student Group"><br>
+            Module: <input type="text" id="module" placeholder="Module"><br>
+            Staff: <input type="text" id="staff" placeholder="Staff"><br>
+            Activity Type: <input type="text" id="activityType" placeholder="Activity Type"><br>
+            Activity Duration: <input type="text" id="activityDuration" placeholder="Activity Duration"><br>
+            <button onclick="updateActivity()" class="btn btn-primary">Update Activity</button>
+        </div>
+
         <script>
             // Function to populate the table with activities
             // This function is called when the button is clicked
@@ -58,18 +70,54 @@
                     var tableElement = document.getElementById('activitiesTable')
                     var rowElement = tableElement.insertRow(-1)
 
-                    var studentCell = rowElement.insertCell(0);
-                    var moduleCell = rowElement.insertCell(1);
-                    var staffCell = rowElement.insertCell(2);
-                    var activityTypeCell = rowElement.insertCell(3);
-                    var activityDurationCell = rowElement.insertCell(4);
+                    var idCell = rowElement.insertCell(0);
+                    var studentCell = rowElement.insertCell(1);
+                    var moduleCell = rowElement.insertCell(2);
+                    var staffCell = rowElement.insertCell(3);
+                    var activityTypeCell = rowElement.insertCell(4);
+                    var activityDurationCell = rowElement.insertCell(5);
 
+                    idCell.innerHTML = activities[i].activity_id;
                     studentCell.innerHTML = activities[i].student_group;
                     moduleCell.innerHTML = activities[i].module_name;
                     staffCell.innerHTML = activities[i].staff_name;
                     activityTypeCell.innerHTML = activities[i].activity_type;
                     activityDurationCell.innerHTML = activities[i].activity_duration;
                 }
+            }
+
+            // Function to show all activities
+            function showAll() {
+                document.getElementById('allActivitiesTable').style.display = 'block';
+            }
+
+            // Function to update an existing activity
+            function updateActivity() {
+                var activityId = document.getElementById('activityId').value;
+                var studentGroup = document.getElementById('studentGroup').value;
+                var module = document.getElementById('module').value;
+                var staff = document.getElementById('staff').value;
+                var activityType = document.getElementById('activityType').value;
+                var activityDuration = document.getElementById('activityDuration').value;
+
+                $.ajax({
+                    'url': '/activities/' + activityId,
+                    'method': 'PUT',
+                    'data': JSON.stringify({
+                        student_group: studentGroup,
+                        module_name: module,
+                        staff_name: staff,
+                        activity_type: activityType,
+                        activity_duration: activityDuration
+                    }),
+                    'contentType': 'application/json',
+                    'success': function(result) {
+                        console.log(result);
+                        getActivities();
+                        populateTable(activities);
+                        showAll();
+                    }
+                });
             }
         </script>
     </body>

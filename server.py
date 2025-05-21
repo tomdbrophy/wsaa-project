@@ -39,6 +39,24 @@ def create_activity():
 
 @app.route('/activities/<activity_id>', methods=['PUT'])
 def update_activity(activity_id):
+    jsonstring = request.json
+    activity_type = jsonstring.get('activity_type')
+    activity_duration = int(jsonstring.get('activity_duration'))
+    student_group = jsonstring.get('student_group')
+    staff_name = jsonstring.get('staff_name')
+    module_name = jsonstring.get('module_name')
+
+    query = """
+    UPDATE activities SET
+        activity_type = %s,
+        activity_duration = %s,
+        student_group = %s,
+        staff_name = %s,
+        module_name = %s
+    WHERE activity_id = %s
+    """
+    params = (activity_type, activity_duration, student_group, staff_name, module_name, activity_id)
+    dao.update(query, params)
     return f'updating activity {activity_id}'
 
 @app.route('/activities/<activity_id>', methods=['DELETE'])
