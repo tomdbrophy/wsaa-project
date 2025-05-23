@@ -23,9 +23,12 @@
             }
         </script>
     </head>
-    <body onload="getActivities()">
+    <body>
         <h1>Teaching Activities</h1>
-        <button onclick="populateTable(activities); showAll()" class="btn btn-primary">Get Activities</button>
+        <button onclick="populateTable(activities), showAll()" class="btn btn-primary">Get Activities</button>
+        <button onclick="showUpdate()" class="btn btn-secondary">Update Activity</button>
+        <button onclick="showDelete()" class="btn btn-danger">Delete Activity</button>
+        <button onclick="showCreate()" class="btn btn-success">Create Activity</button>
 
         <div id="allActivitiesTable" style="display: none;">
             <h2>Teaching Activities</h2>
@@ -49,31 +52,91 @@
             </table>
         </div>
 
-        <div id="updateActivity" style="display: block;">
-            <h2>Update Activity</h2>
-            id: <input type="text" id="activityId" placeholder="Activity ID"><br>
-            Student Group: <input type="text" id="studentGroup" placeholder="Student Group"><br>
-            Module: <input type="text" id="module" placeholder="Module"><br>
-            Staff: <input type="text" id="staff" placeholder="Staff"><br>
-            Activity Type: <input type="text" id="activityType" placeholder="Activity Type"><br>
-            Activity Duration: <input type="text" id="activityDuration" placeholder="Activity Duration"><br>
-            <button onclick="updateActivity()" class="btn btn-primary">Update Activity</button>
+        <div id="updateActivity" style="display: none;">
+            <table class="table table-striped" id="updateTable" style="width: 30%;">
+                <tr>
+                    <th colspan="2"><h2>Update Activity</h2></th>
+                </tr>
+                <tr>
+                    <td>ID:</td>
+                    <td><input type="text" id="activityId" placeholder="Activity ID"></td>
+                </tr>
+                <tr>
+                    <td>Student Group:</td>
+                    <td><input type="text" id="studentGroup" placeholder="Student Group"></td>
+                </tr>
+                <tr>
+                    <td>Module:</td>
+                    <td><input type="text" id="module" placeholder="Module"></td>
+                </tr>
+                <tr>
+                    <td>Staff:</td>
+                    <td><input type="text" id="staff" placeholder="Staff"></td>
+                </tr>
+                <tr>
+                    <td>Activity Type:</td>
+                    <td><input type="text" id="activityType" placeholder="Activity Type"></td>
+                </tr>
+                <tr>
+                    <td>Activity Duration:</td>
+                    <td><input type="text" id="activityDuration" placeholder="Activity Duration"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="updateActivity()" class="btn btn-primary">Update Activity</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <div id="deleteActivity" style="display: block;">
-            <h2>Delete Activity</h2>
-            id: <input type="text" id="deleteActivityId" placeholder="Activity ID"><br>
-            <button onclick="deleteActivity()" class="btn btn-danger">Delete Activity</button>
+        <div id="deleteActivity" style="display: none;">
+            <table class="table table-striped" id="deleteTable" style="width: 30%;">
+                <tr>
+                    <th colspan="2"><h2>Delete Activity</h2></th>
+                </tr>
+                <tr>
+                    <td>ID:</td>
+                    <td><input type="text" id="deleteActivityId" placeholder="Activity ID"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="deleteActivity()" class="btn btn-danger">Delete Activity</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <div id="createActivity" style="display: block;">
-            <h2>Create Activity</h2>
-            Student Group: <input type="text" id="studentGroupCreate" placeholder="Student Group"><br>
-            Module: <input type="text" id="moduleCreate" placeholder="Module"><br>
-            Staff: <input type="text" id="staffCreate" placeholder="Staff"><br>
-            Activity Type: <input type="text" id="activityTypeCreate" placeholder="Activity Type"><br>
-            Activity Duration: <input type="text" id="activityDurationCreate" placeholder="Activity Duration"><br>
-            <button onclick="createActivity()" class="btn btn-success">Create Activity</button>
+        <div id="createActivity" style="display: none;">
+            <table class="table table-striped" id="createTable" style="width: 30%;">
+                <tr>
+                    <th colspan="2"><h2>Create Activity</h2></th>
+                </tr>
+                <tr>
+                    <td>Student Group:</td>
+                    <td><input type="text" id="studentGroupCreate" placeholder="Student Group"></td>
+                </tr>
+                <tr>
+                    <td>Module:</td>
+                    <td><input type="text" id="moduleCreate" placeholder="Module"></td>
+                </tr>
+                <tr>
+                    <td>Staff:</td>
+                    <td><input type="text" id="staffCreate" placeholder="Staff"></td>
+                </tr>
+                <tr>
+                    <td>Activity Type:</td>
+                    <td><input type="text" id="activityTypeCreate" placeholder="Activity Type"></td>
+                </tr>
+                <tr>
+                    <td>Activity Duration:</td>
+                    <td><input type="text" id="activityDurationCreate" placeholder="Activity Duration"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button onclick="createActivity()" class="btn btn-success">Create Activity</button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <script>
@@ -82,6 +145,10 @@
             // It fetches the activities from the server and populates the table
             function populateTable(activities) {
                 getActivities();
+                var tableRows = document.getElementById('activitiesTable').rows.length;
+                for (var i = 0; i < tableRows; i++) {
+                    document.getElementById('activitiesTable').deleteRow(0);
+                }
                 for (var i = 0; i < activities.length; i++) {
                     var tableElement = document.getElementById('activitiesTable')
                     var rowElement = tableElement.insertRow(-1)
@@ -105,6 +172,33 @@
             // Function to show all activities
             function showAll() {
                 document.getElementById('allActivitiesTable').style.display = 'block';
+                document.getElementById('updateActivity').style.display = 'none';
+                document.getElementById('deleteActivity').style.display = 'none';
+                document.getElementById('createActivity').style.display = 'none';
+            }
+
+            // Function to show update table
+            function showUpdate() {
+                document.getElementById('allActivitiesTable').style.display = 'none';
+                document.getElementById('updateActivity').style.display = 'block';
+                document.getElementById('deleteActivity').style.display = 'none';
+                document.getElementById('createActivity').style.display = 'none';
+            }
+
+            // Function to show delete table
+            function showDelete() {
+                document.getElementById('allActivitiesTable').style.display = 'none';
+                document.getElementById('updateActivity').style.display = 'none';
+                document.getElementById('deleteActivity').style.display = 'block';
+                document.getElementById('createActivity').style.display = 'none';
+            }
+
+            // Function to show create table
+            function showCreate() {
+                document.getElementById('allActivitiesTable').style.display = 'none';
+                document.getElementById('updateActivity').style.display = 'none';
+                document.getElementById('deleteActivity').style.display = 'none';
+                document.getElementById('createActivity').style.display = 'block';
             }
 
             // Function to update an existing activity
