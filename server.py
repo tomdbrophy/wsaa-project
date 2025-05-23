@@ -35,6 +35,18 @@ def module_allocation(module_name):
 
 @app.route('/activities', methods=['POST'])
 def create_activity():
+    jsonstring = request.json
+    activity_type = jsonstring.get('activity_type')
+    activity_duration = int(jsonstring.get('activity_duration'))
+    student_group = jsonstring.get('student_group')
+    staff_name = jsonstring.get('staff_name')
+    module_name = jsonstring.get('module_name')
+    query = """
+    INSERT INTO activities (activity_type, activity_duration, student_group, staff_name, module_name)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+    params = (activity_type, activity_duration, student_group, staff_name, module_name)
+    dao.create(query, params)
     return 'creating activity'
 
 @app.route('/activities/<activity_id>', methods=['PUT'])
@@ -61,6 +73,9 @@ def update_activity(activity_id):
 
 @app.route('/activities/<activity_id>', methods=['DELETE'])
 def delete_activity(activity_id):
+    query = "DELETE FROM activities WHERE activity_id = %s"
+    params = (activity_id,)
+    dao.delete(query, params)
     return f'deleting activity {activity_id}'
 
 if __name__ == '__main__':

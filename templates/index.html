@@ -60,6 +60,22 @@
             <button onclick="updateActivity()" class="btn btn-primary">Update Activity</button>
         </div>
 
+        <div id="deleteActivity" style="display: block;">
+            <h2>Delete Activity</h2>
+            id: <input type="text" id="deleteActivityId" placeholder="Activity ID"><br>
+            <button onclick="deleteActivity()" class="btn btn-danger">Delete Activity</button>
+        </div>
+
+        <div id="createActivity" style="display: block;">
+            <h2>Create Activity</h2>
+            Student Group: <input type="text" id="studentGroupCreate" placeholder="Student Group"><br>
+            Module: <input type="text" id="moduleCreate" placeholder="Module"><br>
+            Staff: <input type="text" id="staffCreate" placeholder="Staff"><br>
+            Activity Type: <input type="text" id="activityTypeCreate" placeholder="Activity Type"><br>
+            Activity Duration: <input type="text" id="activityDurationCreate" placeholder="Activity Duration"><br>
+            <button onclick="createActivity()" class="btn btn-success">Create Activity</button>
+        </div>
+
         <script>
             // Function to populate the table with activities
             // This function is called when the button is clicked
@@ -109,6 +125,51 @@
                         staff_name: staff,
                         activity_type: activityType,
                         activity_duration: activityDuration
+                    }),
+                    'contentType': 'application/json',
+                    'success': function(result) {
+                        console.log(result);
+                        getActivities();
+                        populateTable(activities);
+                        showAll();
+                    }
+                });
+            }
+
+            // Function to delete an existing activity
+            function deleteActivity() {
+                var activityId = document.getElementById('deleteActivityId').value;
+
+                $.ajax({
+                    'url': '/activities/' + activityId,
+                    'method': 'DELETE',
+                    'success': function(result) {
+                        console.log(result);
+                        activities = {};
+                        getActivities();
+                        populateTable(activities);
+                        showAll();
+                    }
+                });
+            }
+
+            //Function to create a new activity
+            function createActivity() {
+                var activityType = document.getElementById('activityTypeCreate').value;
+                var activityDuration = document.getElementById('activityDurationCreate').value;
+                var studentGroup = document.getElementById('studentGroupCreate').value;
+                var staffName = document.getElementById('staffCreate').value;
+                var moduleName = document.getElementById('moduleCreate').value;
+
+                $.ajax({
+                    'url': '/activities',
+                    'method': 'POST',
+                    'data': JSON.stringify({
+                        activity_type: activityType,
+                        activity_duration: activityDuration,
+                        student_group: studentGroup,
+                        staff_name: staffName,
+                        module_name: moduleName
                     }),
                     'contentType': 'application/json',
                     'success': function(result) {

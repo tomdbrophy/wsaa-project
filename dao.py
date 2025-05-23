@@ -21,6 +21,16 @@ class DAO:
         with self.connection.cursor() as cursor:
             cursor.execute(query, params)
             self.connection.commit()
+    
+    def delete(self, query, params=None):
+        with self.connection.cursor() as cursor:
+            cursor.execute(query, params)
+            self.connection.commit()
+
+    def create(self, query, params=None):
+        with self.connection.cursor() as cursor:
+            cursor.execute(query, params)
+            self.connection.commit()
 
     def close(self):
         self.connection.close()
