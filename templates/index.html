@@ -23,7 +23,7 @@
             }
         </script>
     </head>
-    <body>
+    <body onload="getActivities()">
         <h1>Teaching Activities</h1>
         <button onclick="populateTable(activities), showAll()" class="btn btn-primary">Get Activities</button>
         <button onclick="showUpdate()" class="btn btn-secondary">Update Activity</button>
@@ -203,12 +203,38 @@
 
             // Function to update an existing activity
             function updateActivity() {
+                
                 var activityId = document.getElementById('activityId').value;
                 var studentGroup = document.getElementById('studentGroup').value;
                 var module = document.getElementById('module').value;
                 var staff = document.getElementById('staff').value;
                 var activityType = document.getElementById('activityType').value;
                 var activityDuration = document.getElementById('activityDuration').value;
+                
+                if (document.getElementById('activityId').value === '') {
+                    alert('Please enter an Activity ID to update.');
+                    return;
+                }
+                if (document.getElementById('studentGroup').value === '' ||
+                    document.getElementById('module').value === '' ||
+                    document.getElementById('staff').value === '' ||
+                    document.getElementById('activityType').value === '' ||
+                    document.getElementById('activityDuration').value === '') {
+                    alert('Please fill in all fields to update the activity.');
+                    return;
+                }
+                if (isNaN(document.getElementById('activityDuration').value)) {
+                    alert('Activity Duration must be a number.');
+                    return;
+                }
+                if (document.getElementById('activityDuration').value <= 0) {
+                    alert('Activity Duration must be greater than 0.');
+                    return;
+                }
+                if (!activities.map(activity => activity.activity_id).includes(document.getElementById('activityId').value)) {
+                    alert('Activity ID does not exist.');
+                    return;
+                }
 
                 $.ajax({
                     'url': '/activities/' + activityId,
@@ -234,6 +260,14 @@
             function deleteActivity() {
                 var activityId = document.getElementById('deleteActivityId').value;
 
+                if (document.getElementById('deleteActivityId').value === '') {
+                    alert('Please enter an Activity ID to delete.');
+                    return;
+                }
+                if (!activities.map(activity => activity.activity_id).includes(document.getElementById('deleteActivityId').value)) {
+                    alert('Activity ID does not exist.');
+                    return;
+                }
                 $.ajax({
                     'url': '/activities/' + activityId,
                     'method': 'DELETE',
@@ -254,6 +288,24 @@
                 var studentGroup = document.getElementById('studentGroupCreate').value;
                 var staffName = document.getElementById('staffCreate').value;
                 var moduleName = document.getElementById('moduleCreate').value;
+
+                if (document.getElementById('studentGroupCreate').value === '' ||
+                    document.getElementById('moduleCreate').value === '' ||
+                    document.getElementById('staffCreate').value === '' ||
+                    document.getElementById('activityTypeCreate').value === '' ||
+                    document.getElementById('activityDurationCreate').value === '') {
+                    alert('Please fill in all fields to create the activity.');
+                    return;
+                }
+                if (isNaN(document.getElementById('activityDurationCreate').value)) {
+                    alert('Activity Duration must be a number.');
+                    return;
+                }
+                if (document.getElementById('activityDurationCreate').value <= 0) {
+                    alert('Activity Duration must be greater than 0.');
+                    return;
+                }
+                
 
                 $.ajax({
                     'url': '/activities',
